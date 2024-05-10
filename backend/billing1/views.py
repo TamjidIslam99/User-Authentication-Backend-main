@@ -1,10 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .models import Semester
-from .serializers import SemesterSerializer
+from .models import *
+from .serializers import *
 
-class SemesterViewSet(viewsets.ModelViewSet):
-    queryset = Semester.objects.all()
-    serializer_class = SemesterSerializer
 
 

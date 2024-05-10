@@ -24,11 +24,14 @@ function LoginForm() {
       
     })
     .then(data => {
-      
+      const { name } = data;
+    // Save user's name to localStorage or handle it accordingly
+     localStorage.setItem('username', name);
       navigate('/home');
       // Save token to localStorage or handle it accordingly
     })
     .catch(error => console.error('Error logging in:', error));
+    
     
   };
 

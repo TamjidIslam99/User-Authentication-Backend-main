@@ -1,10 +1,6 @@
 from rest_framework import serializers
-from .models import Semester
+from .models import *
 
-class SemesterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Semester
-        fields = '__all__'
 
 
     

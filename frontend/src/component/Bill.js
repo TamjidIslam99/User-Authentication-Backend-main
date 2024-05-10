@@ -1,150 +1,140 @@
-import React from 'react'
-import { Table } from 'react-bootstrap'
-import '../css/Bill.css'
-function Bill () {
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const EvaluationForm = () => {
+  const [formData, setFormData] = useState({
+    course: '',
+    semester: '',
+    course_teacher: '',
+    question_formulation: false,
+    question_moderation: false,
+    question_translation: false,
+    project_evaluation: false,
+    lab_exam_evaluation: false,
+    viva_voce_evaluation: false,
+    number_of_tutorial: 0,
+    total_tutorial_answerscripts_evaluation: 0,
+    total_semester_final_exam_answerscripts_evaluation: 0,
+    thesis_evaluation: false,
+    thesis_evaluation: 0,
+    exam_committee_chairman: false,
+    supervisor: false,
+  });
+  const [semesters, setSemesters] = useState([]);
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    const fetchSemesters = async () => {
+      try {
+        const response = await axios.get('/api/semesters/');
+        setSemesters(response.data);
+      } catch (error) {
+        console.error('Error fetching semesters:', error);
+      }
+    };
+
+    fetchSemesters();
+  }, []);
+
+  const handleSemesterChange = async (e) => {
+    const semesterId = e.target.value;
+    setFormData({ ...formData, semester: semesterId, course: '' });
+    try {
+      const response = await axios.get(`/api/semesters/${semesterId}/courses/`);
+      setCourses(response.data);
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+    }
+  };
+
+  const handleChange = (e) => {
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setFormData({ ...formData, [e.target.name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post('/api/save_evaluation/', formData);
+      alert('Evaluation saved successfully');
+    } catch (error) {
+      console.error('Error saving evaluation:', error);
+      alert('An error occurred while saving the evaluation');
+    }
+  };
+
   return (
-<div class="bill_info" >
+    <div>
+      <h2>Evaluation Form</h2>
+      <form onSubmit={handleSubmit}>
+        {/* Select Semester */}
+        <div>
+          <label htmlFor="semester">Select Semester:</label>
+          <select
+            id="semester"
+            name="semester"
+            value={formData.semester}
+            onChange={handleSemesterChange}
+          >
+            <option value="">--Please choose a semester--</option>
+            {semesters.map((semester) => (
+              <option key={semester.id} value={semester.id}>
+                {semester.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
+        {/* Select Course */}
+        <div>
+          <label htmlFor="course">Select Course:</label>
+          <select
+            id="course"
+            name="course"
+            value={formData.course}
+            onChange={handleChange}
+          >
+            <option value="">--Please choose a course--</option>
+            {courses.map((course) => (
+              <option key={course.id} value={course.id}>
+                {course.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-    <Table responsive hover striped >
-        <tbody>
-        <tr>
-          <td><strong>Course Teacher / External</strong></td>
-          <td><strong>:</strong></td>
-          <td>
-            <input type="radio" id="position1" name="position" value="Course Teacher"/>
-            <label for="position1"> Course Teacher </label>
-            <input type="radio" id="position2" name="position" value="External"/>
-            <label for="position2"> External</label>
-          </td>
-        </tr>
-        <tr>
-            <td><strong>Question Formulation</strong> </td>
-            <td><strong>:</strong></td>
-            <td>
-                <input type="radio" id="creation1" name="creation" value="Yes"/>
-                <label for="creation1"> Yes </label>
-                <input type="radio" id="creation2" name="creation" value="No"/>
-                <label for="creation2"> No</label>
-            </td>
-        </tr>
-        <tr>
-            <td><strong>Question Moderation</strong></td>
-            <td><strong>:</strong></td>
-            <td>
-                <input type="radio" id="moderation1" name="moderation" value="Yes"/>
-                <label for="moderation1"> Yes </label>
-                <input type="radio" id="moderation2" name="moderation" value="No"/>
-                <label for="moderation2"> No</label>
-            </td>
-        </tr>
-        <tr>
-            <td><strong>Question Translation</strong> </td>
-            <td><strong>:</strong></td>
-            <td>
-                <input type="radio" id="translation1" name="translation" value="Yes"/>
-                <label for="translation1"> Yes </label>
-                <input type="radio" id="translation2" name="translation" value="No"/>
-                <label for="translation2"> No</label>
-            </td>
-        </tr>
-        <tr>
-            <td><strong>Project Evaluation</strong></td>
-            <td><strong>:</strong></td>
-            <td>
-                <input type="radio" id="pevaluation1" name="pevaluation" value="Yes"/>
-                <label for="pevaluation1"> Yes </label>
-                <input type="radio" id="pevaluation2" name="pevaluation" value="No"/>
-                <label for="pevaluation2"> No</label><br></br>
-            </td>
-        </tr>
-        <tr>
-            <td><strong>Lab Exam Evaluation</strong></td>
-            <td><strong>:</strong></td>
-            <td>
-                <input type="radio" id="levaluation1" name="levaluation" value="Yes"/>
-                <label for="levaluation1"> Yes </label>
-                <input type="radio" id="levaluation2" name="levaluation" value="No"/>
-                <label for="levaluation2"> No</label>
-            </td>
-        </tr>
-        <tr>
-            <td><strong>Viva Voce Evaluation</strong></td>
-            <td><strong>:</strong></td>
-            <td>
-                <input type="radio" id="vevaluation1" name="vevaluation" value="Yes"/>
-                <label for="vevaluation1"> Yes </label>
-                <input type="radio" id="vevaluation2" name="vevaluation" value="No"/>
-                <label for="vevaluation2"> No</label>
-            </td>
-        </tr>
-        <tr>
-            <td><strong><label for="numberInput1">Number of Tutorial</label></strong></td>
-            <td><strong>:</strong></td>
-            <td>   
-                <input type="number" id="numberInput1" name="numberInput1" min="0" max="10" step="1"/>
-            </td>
-        </tr>
-        <tr>
-            <td><strong><label for="numberInput2">Total Tutorial Answerscripts Evaluation</label></strong></td>
-            <td><strong>:</strong></td>
-            <td>   
-                <input type="number" id="numberInput2" name="numberInput2" min="0" max="100" step="1"/>
-            </td>
-        </tr>
-        <tr>
-            <td><strong><label for="numberInput3">Total Semester Final Exam Answerscripts Evaluation</label></strong></td>
-            <td><strong>:</strong></td>
-            <td>   
-                <input type="number" id="numberInput3" name="numberInput3" min="0" max="100" step="1"/>
-            </td>
-        </tr>
-        <tr>
-            <td><strong>Thesis Evaluation</strong></td>
-            <td><strong>:</strong></td>
-            <td>
-                <input type="radio" id="tevaluation1" name="tevaluation" value="Yes"/>
-                <label for="tevaluation1"> Yes </label>
-                <input type="radio" id="tevaluation2" name="tevaluation" value="No"/>
-                <label for="tevaluation2"> No</label>
-            </td>
-        </tr>
-        <tr>
-            <td><strong><label for="numberInput4">Total Thesis Evaluation</label></strong></td>
-            <td><strong>:</strong></td>
-            <td>   
-                <input type="number" id="numberInput4" name="numberInput4" min="0" max="100" step="1"/>
-            </td>
-        </tr>
-        <tr>
-            <td><strong>Exam Committee Chairman</strong></td>
-            <td><strong>:</strong></td>
-            <td>
-                <input type="radio" id="exam1" name="exam" value="Yes"/>
-                <label for="exam1"> Yes </label>
-                <input type="radio" id="exam2" name="exam" value="No"/>
-                <label for="exam2"> No</label>
-            </td>
-        </tr>
-        <tr>
-            <td><strong>Supervisor</strong></td>
-            <td><strong>:</strong></td>
-            <td>
-                <input type="radio" id="supervisor1" name="supervisor" value="Yes"/>
-                <label for="supervisor1"> Yes </label>
-                <input type="radio" id="supervisor2" name="supervisor" value="No"/>
-                <label for="supervisor2"> No</label>
-            </td>
-        </tr>
-        </tbody>
-    </Table>
-  
-    
-    
-    
+        {/* Other Form Fields */}
+        {/* Example: Course Teacher */}
+        <div>
+          <label htmlFor="course_teacher">Course Teacher:</label>
+          <input
+            type="text"
+            id="course_teacher"
+            name="course_teacher"
+            value={formData.course_teacher}
+            onChange={handleChange}
+          />
+        </div>
 
-</div>
-  )
-}
+        {/* Example: Question Formulation */}
+        <div>
+          <label>
+            Question Formulation:
+            <input
+              type="checkbox"
+              name="question_formulation"
+              checked={formData.question_formulation}
+              onChange={handleChange}
+            />
+          </label>
+        </div>
 
-export default Bill
+        {/* Add other form fields here */}
+        
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  );
+};
+
+export default EvaluationForm;

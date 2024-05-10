@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useState,useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css'; // Import CSS file for styling
 
 const Home = () => {
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    // Retrieve user's name from localStorage
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
   return (
     <div className="container-fluid">
       {/* Background image */}
@@ -15,6 +24,7 @@ const Home = () => {
         <nav className="navbar navbar-expand-lg navbar-dark">
           <div className="container">
             <Link className="navbar-brand" to="/">Billing System</Link>
+
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon"></span>
             </button>
@@ -33,7 +43,8 @@ const Home = () => {
       {/* Main content */}
       <div className="row line">
         <div className="col-md-6 offset-md-3 text-center mt-5">
-          <h1>Welcome to the Billing System</h1>
+          <h1>Welcome to the Billing System    {username && <p>Hello, {username}</p>}</h1>
+          
           {/* Add other content here */}
         </div>
       </div>

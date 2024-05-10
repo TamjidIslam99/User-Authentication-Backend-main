@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 function RegisterForm() {
     const [username, setUsername] = useState('');
+    const [name, setName]=useState('')
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -12,7 +13,7 @@ function RegisterForm() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username, email, password }),
+            body: JSON.stringify({ username, email, password ,name}),
         })
         .then(response => {
             if (response.ok) {
@@ -30,6 +31,7 @@ function RegisterForm() {
             <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
             <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
             <button type="submit">Register</button>
         </form>
     );
