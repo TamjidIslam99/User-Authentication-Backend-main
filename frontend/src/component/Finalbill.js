@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import '../css/finalBill.css'
-import logo1 from './logo.png'
+
 import {Table}  from 'react-bootstrap'
 const Finalbill = () => {
   return (
@@ -13,7 +13,7 @@ const Finalbill = () => {
         <h1 className="title">পরীক্ষা নিয়ন্ত্রকের অফিস</h1>
         <h2>জাহাঙ্গীরনগর বিশ্ববিদ্যালয়</h2>
         <h5><u>সাভার, ঢাকা</u></h5>
-        <img  src={logo1}  alt="Logo of JU" height={100}/>
+        {/* <img  src={logo1}  alt="Logo of JU" height={100}/> */}
         <h5>রেজি নং : ......................... পৃষ্ঠা নং : .......................</h5>
         <h5>স্মারক সংখ্যা : জাবি পনিঅ ...................... তারিখ : ................</h5><br/>
         <h4><u>পরীক্ষা সংক্রান্ত কাজের পারিতোষিক বিল ফরম - ১</u></h4>

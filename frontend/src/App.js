@@ -8,6 +8,8 @@ import EvaluationForm from './component/EvaluationForm';
 import Finalbill from './component/Finalbill';
 import FormPage from './component/FormPage';
 import DisplayPage from './component/DisplayPage';
+import Profile from './component/Profile';
+import Home1 from './component/Home1';
 
 
 function App() {
@@ -15,10 +17,13 @@ function App() {
   return (
     <Router>
       <Routes>
-       {/* <Route path="/" element={< LoginForm/>} /> */}
-        <Route path="/" element={< FormPage setOptions={setOptions}/>} />
+        <Route path="/" element={< Home1/>} /> 
+        <Route path="/login" element={< LoginForm/>} /> 
+        <Route path='/register' element={<RegisterForm/>}/>
+        <Route path="/billing" element={< FormPage setOptions={setOptions}/>} />
         <Route path="/display" element={<DisplayPage options={options}/>} ></Route>
-        <Route path="/home" element={<Home />} /> {/* Define your home page route */}
+        <Route path="/home" element={<Home />} />
+        <Route path="/profile" element={<Profile/>} /> {/* Define your home page route */}
       </Routes>
     </Router>
   );

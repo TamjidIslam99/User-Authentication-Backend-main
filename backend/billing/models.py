@@ -5,10 +5,15 @@ class CustomUser(models.Model):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=40, unique=True)
     password = models.CharField(max_length=128)
-    name=models.CharField(max_length=100,default="Mahfuz")
+    adress=models.CharField(max_length=123)
+    designation=models.CharField(max_length=23,default="Professor")
+    phone=models.CharField(max_length=30)
+    dept=models.CharField(max_length=30)
+    name=models.CharField(max_length=100)
+    bankaccno=models.CharField(max_length=50,default="12345678")
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-
+    profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
 

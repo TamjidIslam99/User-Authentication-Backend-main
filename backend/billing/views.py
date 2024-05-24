@@ -5,6 +5,10 @@ from .models import *
 from .serializers import *
 from rest_framework import generics
 import json
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
 @api_view(['POST'])
 def register(request):
     if request.method == 'POST':
@@ -23,8 +27,20 @@ def login(request):
             password = serializer.validated_data['password']
             user = CustomUser.objects.filter(username=username).first()
             if user and user.check_password(password):
-                # Return user's name along with the success message
-                return JsonResponse({'message': 'Login successful', 'name': user.name}, status=200)
+                # Return user data along with the success message
+                user_data = {
+                    'id':user.id,
+                    'username': user.username,
+                    'name': user.name,
+                    'address': user.adress,
+                    'designation': user.designation,
+                    'bankaccno': user.bankaccno,
+                    'phone': user.phone,
+                    'dept':user.dept,
+                    'email':user.email,
+                    'profile_photo': user.profile_photo.url if user.profile_photo else None,
+                }
+                return JsonResponse({'message': 'Login successful', 'user': user_data}, status=200)
             else:
                 return JsonResponse({'error': 'Invalid username or password'}, status=400)
         else:
@@ -60,3 +76,16 @@ def save_evaluation(request):
         return Response(serializer.errors, status=400)
     else:
         return Response({'error': 'Invalid request method'}, status=405)
+
+from django.http import JsonResponse
+
+from django.http import JsonResponse
+
+@api_view(['DELETE'])
+def delete_profile(request, user_id):
+    try:
+        user = CustomUser.objects.get(id=user_id)
+        user.delete()
+        return JsonResponse({'message': 'Profile deleted successfully'}, status=204)
+    except CustomUser.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
